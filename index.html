@@ -15,22 +15,52 @@
     padding: 16px;
     min-height: 100vh;
   }
+  body.level2 {
+    background: linear-gradient(135deg, #2c3e50 0%, #4a148c 50%, #880e4f 100%);
+  }
+  body.victory {
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #f83600 100%);
+  }
   h1 {
     font-size: 40px; margin: 8px 0;
     text-shadow: 3px 3px 0 #d96fa8, 6px 6px 12px rgba(0,0,0,0.25);
     letter-spacing: 2px;
   }
+  body.level2 h1 { text-shadow: 3px 3px 0 #4a148c, 6px 6px 12px rgba(0,0,0,0.5); }
+  body.victory h1 { text-shadow: 3px 3px 0 #b71c1c, 6px 6px 12px rgba(0,0,0,0.4); }
   .panel {
     background: rgba(255,255,255,0.18);
     backdrop-filter: blur(10px);
     border-radius: 16px; padding: 14px 18px;
-    margin: 12px auto; max-width: 540px;
+    margin: 12px auto; max-width: 600px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   }
   .stats { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 8px; }
-  .stat { min-width: 80px; }
-  .stat-label { font-size: 12px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
-  .stat-value { font-size: 28px; font-weight: bold; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+  .stat { min-width: 70px; }
+  .stat-label { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-value { font-size: 26px; font-weight: bold; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+  .progress-wrap {
+    margin-top: 10px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 20px;
+    height: 22px; overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #feca57, #ff6b9d, #a55eea);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 12px rgba(255,255,255,0.5);
+  }
+  .progress-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    letter-spacing: 1px;
+  }
   #comboMsg {
     font-size: 26px; font-weight: bold; min-height: 34px; margin: 6px 0;
     color: #fff8a3; text-shadow: 2px 2px 0 #ff5e87, 0 0 20px #fff;
@@ -51,6 +81,10 @@
     padding: 10px; border-radius: 16px;
     margin: 16px auto; width: max-content;
     box-shadow: inset 0 4px 12px rgba(0,0,0,0.15), 0 12px 30px rgba(0,0,0,0.2);
+  }
+  body.level2 #board {
+    background: rgba(0,0,0,0.3);
+    box-shadow: inset 0 4px 12px rgba(0,0,0,0.5), 0 12px 30px rgba(255,0,100,0.3);
   }
   .cell {
     width: 58px; height: 58px; border-radius: 12px;
@@ -89,6 +123,8 @@
   .t3 { background: linear-gradient(135deg, #26de81, #20bf6b); }
   .t4 { background: linear-gradient(135deg, #48dbfb, #0abde3); }
   .t5 { background: linear-gradient(135deg, #a55eea, #8854d0); }
+  .t6 { background: linear-gradient(135deg, #ff4757, #c44569); }
+  .t7 { background: linear-gradient(135deg, #00d2d3, #01a3a4); }
   .controls { margin-top: 8px; }
   button {
     padding: 12px 24px; font-size: 16px; font-weight: bold; color: #fff;
@@ -106,6 +142,10 @@
     background: linear-gradient(135deg, #6ba8ff, #4789ff);
     box-shadow: 0 6px 0 #2a5fb8, 0 8px 16px rgba(0,0,0,0.25);
   }
+  button.gold {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    box-shadow: 0 6px 0 #b8860b, 0 8px 16px rgba(0,0,0,0.25);
+  }
   #overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.6);
@@ -121,14 +161,43 @@
     text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     max-width: 90%;
+    animation: modalIn 0.5s ease-out;
+  }
+  @keyframes modalIn {
+    0%   { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    70%  { transform: scale(1.05) rotate(2deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
   }
   #modal h2 { font-size: 32px; margin: 0 0 12px; color: #d63384; }
+  #modal.victory { background: linear-gradient(135deg, #fff9c4, #ffe082); }
+  #modal.victory h2 { color: #b71c1c; font-size: 40px; }
+  #modal.lose { background: linear-gradient(135deg, #cfd8dc, #90a4ae); }
+  #modal.lose h2 { color: #37474f; }
   #modal p  { font-size: 20px; margin: 8px 0; }
   #modal .score-big { font-size: 44px; font-weight: bold; color: #ff4789; margin: 12px 0; }
+  #modal.victory .score-big { color: #b71c1c; }
+  #modal.lose .score-big { color: #37474f; }
   #modal .badge {
     display: inline-block; background: gold; color: #5a2a4a;
     padding: 4px 12px; border-radius: 20px;
     font-size: 13px; margin: 4px; font-weight: bold;
+  }
+  .trophy {
+    font-size: 80px;
+    animation: trophyBounce 1s ease-out infinite;
+  }
+  @keyframes trophyBounce {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%     { transform: translateY(-15px) rotate(5deg); }
+  }
+  .confetti {
+    position: fixed; top: -10px; font-size: 30px;
+    pointer-events: none; z-index: 200;
+    animation: confettiFall 3s linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
   .footer { margin-top: 14px; font-size: 13px; opacity: 0.85; }
   #errBox {
@@ -141,14 +210,23 @@
 </style>
 </head>
 <body>
-  <h1>🍭 CANDY MATCH 🍬</h1>
+  <h1 id="title">🍭 CANDY MATCH 🍬</h1>
   <div id="errBox"></div>
 
   <div class="panel stats">
+    <div class="stat"><div class="stat-label">Level</div><div class="stat-value" id="level">1</div></div>
     <div class="stat"><div class="stat-label">Score</div><div class="stat-value" id="score">0</div></div>
+    <div class="stat"><div class="stat-label">Target</div><div class="stat-value" id="target">1500</div></div>
     <div class="stat"><div class="stat-label">Moves</div><div class="stat-value" id="moves">30</div></div>
     <div class="stat"><div class="stat-label">Combo</div><div class="stat-value" id="combo">x1</div></div>
     <div class="stat"><div class="stat-label">Best</div><div class="stat-value" id="best">0</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText">0 / 1500</div>
+    </div>
   </div>
 
   <div id="comboMsg"></div>
@@ -178,23 +256,55 @@
   });
 
   var ROWS = 8, COLS = 8;
-  var CANDY_TYPES = 6;
   var CANDY_GLYPHS = ['A', 'B', 'C', 'D', 'E', 'F'];
-  var CANDY_EMOJI  = ['🍬', '🍭', '🍫', '🍩', '🍪', '🧁'];
-  var STARTING_MOVES = 30;
+  var CANDY_EMOJI  = ['🍬', '🍭', '🍫', '🍩', '🍪', '🧁', '🍰', '🍓'];
 
-  var board = [], score = 0, moves = STARTING_MOVES;
+  // Level configuration
+  var LEVELS = [
+    { level: 1, name: 'Sweet Beginnings',  target: 1500, moves: 30, candyTypes: 6, candyEmoji: ['🍬', '🍭', '🍫', '🍩', '🍪', '🧁'] },
+    { level: 2, name: 'Sugar Storm',       target: 3000, moves: 25, candyTypes: 7, candyEmoji: ['🍬', '🍭', '🍫', '🍩', '🍪', '🧁', '🍰'] }
+  ];
+
+  var board = [], score = 0, moves = 0, currentLevel = 1, currentTarget = 1500;
+  var candyTypes = 6, candyEmoji = CANDY_EMOJI;
   var selected = null, isAnimating = false, comboCount = 0;
   var hintCell = null, hintTimeout = null, bestScore = 0;
+  var level1HighScore = 0, gameCompleted = false;
 
-  try { bestScore = parseInt(localStorage.getItem('candyBest') || '0', 10) || 0; } catch (e) { bestScore = 0; }
+  try {
+    bestScore = parseInt(localStorage.getItem('candyBest') || '0', 10) || 0;
+    level1HighScore = parseInt(localStorage.getItem('candyL1') || '0', 10) || 0;
+  } catch (e) { bestScore = 0; level1HighScore = 0; }
 
   function newGame() {
-    score = 0; moves = STARTING_MOVES; selected = null; hintCell = null;
+    currentLevel = 1; gameCompleted = false;
+    setupLevel(1);
+  }
+
+  function setupLevel(lvl) {
+    currentLevel = lvl;
+    var cfg = LEVELS[lvl - 1];
+    currentTarget = cfg.target;
+    moves = cfg.moves;
+    candyTypes = cfg.candyTypes;
+    candyEmoji = cfg.candyEmoji;
+    score = 0; selected = null; hintCell = null;
     if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; }
     comboCount = 0; isAnimating = false;
     var msgEl = document.getElementById('comboMsg');
     if (msgEl) msgEl.textContent = '';
+
+    // Update body theme
+    document.body.classList.remove('level2', 'victory');
+    if (lvl === 2) document.body.classList.add('level2');
+
+    // Update title
+    var titleEl = document.getElementById('title');
+    if (titleEl) {
+      if (lvl === 1) titleEl.textContent = '🍭 CANDY MATCH 🍬';
+      else titleEl.textContent = '⚡ SUGAR STORM ⚡';
+    }
+
     initBoard(); renderBoard(); updateUI();
   }
 
@@ -211,8 +321,8 @@
     if (col >= 2 && board[row][col-1] === board[row][col-2]) banned[board[row][col-1]] = true;
     if (row >= 2 && board[row-1][col] === board[row-2][col]) banned[board[row-1][col]] = true;
     var choices = [];
-    for (var i = 0; i < CANDY_TYPES; i++) if (!banned[i]) choices.push(i);
-    if (choices.length === 0) for (var j = 0; j < CANDY_TYPES; j++) choices.push(j);
+    for (var i = 0; i < candyTypes; i++) if (!banned[i]) choices.push(i);
+    if (choices.length === 0) for (var j = 0; j < candyTypes; j++) choices.push(j);
     return choices[Math.floor(Math.random() * choices.length)];
   }
 
@@ -231,7 +341,7 @@
           cell.classList.add('empty');
         } else {
           cell.className = 'cell t' + type;
-          cell.textContent = CANDY_EMOJI[type] || CANDY_GLYPHS[type] || '?';
+          cell.textContent = candyEmoji[type] || CANDY_GLYPHS[type] || '?';
           (function(rr, cc) { cell.onclick = function() { handleClick(rr, cc); }; })(r, c);
         }
         boardEl.appendChild(cell);
@@ -248,7 +358,7 @@
   }
 
   function handleClick(r, c) {
-    if (isAnimating || moves <= 0) return;
+    if (isAnimating || moves <= 0 || gameCompleted) return;
     if (board[r][c] === -1 || board[r][c] === undefined) return;
     hintCell = null;
     if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; }
@@ -273,7 +383,7 @@
       moves++; renderBoard(); isAnimating = false; updateUI(); return;
     }
     await processCascade();
-    isAnimating = false; updateUI(); checkGameOver();
+    isAnimating = false; updateUI(); checkProgress();
   }
 
   function findMatches() {
@@ -359,13 +469,13 @@
   function refillEmpty() {
     for (var c = 0; c < COLS; c++) {
       for (var r = 0; r < ROWS; r++) {
-        if (board[r][c] === -1) board[r][c] = Math.floor(Math.random() * CANDY_TYPES);
+        if (board[r][c] === -1) board[r][c] = Math.floor(Math.random() * candyTypes);
       }
     }
   }
 
   function showHint() {
-    if (isAnimating || moves <= 0) return;
+    if (isAnimating || moves <= 0 || gameCompleted) return;
     var move = findAnyValidMove();
     if (move) {
       hintCell = move; renderBoard();
@@ -398,32 +508,157 @@
   function updateUI() {
     var s = document.getElementById('score'), m = document.getElementById('moves');
     var c = document.getElementById('combo'), b = document.getElementById('best');
+    var lv = document.getElementById('level'), tg = document.getElementById('target');
+    var pb = document.getElementById('progressBar'), pt = document.getElementById('progressText');
     if (s) s.textContent = score;
     if (m) m.textContent = moves;
     if (c) c.textContent = 'x' + Math.max(1, comboCount);
     if (b) b.textContent = bestScore;
+    if (lv) lv.textContent = currentLevel;
+    if (tg) tg.textContent = currentTarget;
+    if (pb) {
+      var pct = Math.min(100, (score / currentTarget) * 100);
+      pb.style.width = pct + '%';
+    }
+    if (pt) pt.textContent = score + ' / ' + currentTarget;
   }
 
-  function checkGameOver() {
-    if (moves > 0) return;
+  function checkProgress() {
+    if (score >= currentTarget) {
+      if (currentLevel === 1) {
+        if (score > level1HighScore) {
+          level1HighScore = score;
+          try { localStorage.setItem('candyL1', String(level1HighScore)); } catch (e) {}
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          try { localStorage.setItem('candyBest', String(bestScore)); } catch (e) {}
+        }
+        showLevelUp();
+      } else {
+        gameCompleted = true;
+        if (score > bestScore) {
+          bestScore = score;
+          try { localStorage.setItem('candyBest', String(bestScore)); } catch (e) {}
+        }
+        showVictory();
+      }
+    } else if (moves <= 0) {
+      if (score > bestScore) {
+        bestScore = score;
+        try { localStorage.setItem('candyBest', String(bestScore)); } catch (e) {}
+      }
+      showGameOver();
+    }
+  }
+
+  function showLevelUp() {
+    var ov = document.getElementById('overlay');
+    var modal = document.getElementById('modal');
+    var title = document.getElementById('modalTitle');
+    var fs = document.getElementById('finalScore');
+    var bg = document.getElementById('badges');
+
+    modal.classList.remove('victory', 'lose');
+    title.textContent = '🎊 LEVEL 1 CLEARED!';
+    fs.textContent = score;
+
+    var badges = ['✅ Target Reached!', '⭐ Score: ' + score];
+    if (level1HighScore === score && score > 0) badges.push('🏆 New L1 Best!');
+    bg.innerHTML = badges.map(function(b){return '<span class="badge">'+b+'</span>';}).join('');
+
+    var btnContainer = modal.querySelector('p:last-child');
+    btnContainer.innerHTML = '<button class="gold" onclick="goToLevel2()">⚡ Start Level 2</button> <button class="secondary" onclick="closeModal()">Replay L1</button>';
+
+    ov.classList.add('show');
+  }
+
+  function goToLevel2() {
+    var ov = document.getElementById('overlay');
+    ov.classList.remove('show');
+    var modal = document.getElementById('modal');
+    var btnContainer = modal.querySelector('p:last-child');
+    btnContainer.innerHTML = '<button onclick="closeModal()">Play Again</button>';
+    setupLevel(2);
+  }
+
+  function showVictory() {
+    var ov = document.getElementById('overlay');
+    var modal = document.getElementById('modal');
+    var title = document.getElementById('modalTitle');
+    var fs = document.getElementById('finalScore');
+    var bg = document.getElementById('badges');
+
+    modal.classList.remove('lose');
+    modal.classList.add('victory');
+    title.innerHTML = '<div class="trophy">🏆</div>YOU WIN!';
+    fs.textContent = score;
+
+    var badges = ['👑 Champion!', '🎉 All Levels Cleared!', '⚡ Sugar Storm Survived!'];
+    if (score >= 5000) badges.push('🌟 LEGENDARY!');
+    if (comboCount >= 5) badges.push('🔥 Combo King');
+    if (score === bestScore && score > 0) badges.push('🏆 New Best!');
+    bg.innerHTML = badges.map(function(b){return '<span class="badge">'+b+'</span>';}).join('');
+
+    var btnContainer = modal.querySelector('p:last-child');
+    btnContainer.innerHTML = '<button class="gold" onclick="closeModal()">🎮 Play Again</button>';
+
+    ov.classList.add('show');
+    launchConfetti();
+  }
+
+  function showGameOver() {
+    var ov = document.getElementById('overlay');
+    var modal = document.getElementById('modal');
+    var title = document.getElementById('modalTitle');
+    var fs = document.getElementById('finalScore');
+    var bg = document.getElementById('badges');
+
+    modal.classList.remove('victory');
+    modal.classList.add('lose');
+    title.textContent = '💔 Out of Moves!';
+    fs.textContent = score;
+
+    var badges = ['Level ' + currentLevel + ' Failed'];
+    if (score >= currentTarget * 0.75) badges.push('🥈 So Close!');
+    if (score >= currentTarget * 0.5) badges.push('🥉 Keep Trying!');
     if (score > bestScore) {
       bestScore = score;
       try { localStorage.setItem('candyBest', String(bestScore)); } catch (e) {}
     }
-    var fs = document.getElementById('finalScore'); if (fs) fs.textContent = score;
-    var badges = [];
-    if (score >= 1000) badges.push('⭐ Sugar Apprentice');
-    if (score >= 3000) badges.push('🌟 Candy Master');
-    if (score >= 6000) badges.push('👑 Sweet Legend');
-    if (comboCount >= 5) badges.push('🔥 Combo King');
     if (score === bestScore && score > 0) badges.push('🏆 New Best!');
-    var bg = document.getElementById('badges');
-    if (bg) bg.innerHTML = badges.map(function(b){return '<span class="badge">'+b+'</span>';}).join('');
-    var ov = document.getElementById('overlay'); if (ov) ov.classList.add('show');
+    bg.innerHTML = badges.map(function(b){return '<span class="badge">'+b+'</span>';}).join('');
+
+    var btnContainer = modal.querySelector('p:last-child');
+    btnContainer.innerHTML = '<button onclick="closeModal()">Try Again</button>';
+
+    ov.classList.add('show');
+  }
+
+  function launchConfetti() {
+    var emojis = ['🎉', '🎊', '⭐', '🌟', '✨', '💖', '🏆', '👑', '🍬', '🍭'];
+    for (var i = 0; i < 40; i++) {
+      (function(idx) {
+        setTimeout(function() {
+          var c = document.createElement('div');
+          c.className = 'confetti';
+          c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.animationDuration = (2 + Math.random() * 2) + 's';
+          c.style.fontSize = (20 + Math.random() * 25) + 'px';
+          document.body.appendChild(c);
+          setTimeout(function() { if (c.parentNode) c.parentNode.removeChild(c); }, 4000);
+        }, idx * 80);
+      })(i);
+    }
   }
 
   function closeModal() {
     var ov = document.getElementById('overlay'); if (ov) ov.classList.remove('show');
+    var modal = document.getElementById('modal');
+    modal.classList.remove('victory', 'lose');
+    var btnContainer = modal.querySelector('p:last-child');
+    btnContainer.innerHTML = '<button onclick="closeModal()">Play Again</button>';
     newGame();
   }
 
